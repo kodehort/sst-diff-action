@@ -14,10 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 8
+          run_install: false
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 18.x
       - run: |
-          npm install
+          pnpm install
       - run: |
-          npm run all
+          pnpm run all
   # make sure the action works on a clean machine without building
   test:
     runs-on: ubuntu-latest
