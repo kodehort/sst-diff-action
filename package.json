@@ -5,12 +5,14 @@
   "description": "Github action that will compile an sst diff and write it to the action summary.",
   "main": "lib/main.js",
   "scripts": {
+    "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "tsup",
+    "package": "ncc build --source-map --license licenses.txt",
+    "tsup": "tsup",
     "test": "vitest run",
-    "all": "npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/node": "^20.2.5",
     "@typescript-eslint/parser": "^5.59.2",
+    "@vercel/ncc": "^0.36.1",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-github": "^4.8.0",
