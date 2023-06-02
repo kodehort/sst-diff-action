@@ -8,9 +8,6 @@ dependencies:
   '@actions/core':
     specifier: ^1.10.0
     version: 1.10.0
-  '@aws-sdk/client-cloudformation':
-    specifier: ^3.344.0
-    version: 3.344.0
   '@babel/preset-typescript':
     specifier: ^7.21.5
     version: 7.21.5(@babel/core@7.22.1)
