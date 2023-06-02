@@ -34,18 +34,21 @@ vi.mock('sst/project.js', () => {
       paths: {
         config: '',
       },
+      config: {
+        region: undefined,
+      },
     }),
   }
 })
 
-vi.mock('sst/credentials.js', async () => {
-  return {
-    useAWSClient: vi.fn().mockReturnValue({
-      send: vi.fn().mockReturnValue({
-        TemplateBody: '{}',
-      }),
-    }),
-  }
+vi.mock('@aws-sdk/client-cloudformation', async () => {
+  const CloudFormationClient = vi.fn()
+  CloudFormationClient.prototype.send = vi.fn().mockReturnValue({
+    TemplateBody: '{}',
+  })
+  const GetTemplateCommand = vi.fn()
+
+  return { CloudFormationClient, GetTemplateCommand }
 })
 
 vi.mock('sst/cli/ui/stack.js', () => {

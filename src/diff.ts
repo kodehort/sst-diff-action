@@ -4,7 +4,6 @@ import {
   GetTemplateCommand,
 } from '@aws-sdk/client-cloudformation'
 import { stackNameToId } from 'sst/cli/ui/stack.js'
-import { useAWSClient } from 'sst/credentials.js'
 import { useProject } from 'sst/project.js'
 import { Stacks } from 'sst/stacks/index.js'
 
@@ -24,7 +23,10 @@ export const writeSummary = async (stage: string): Promise<void> => {
   let changedStacks = 0
   for (const stack of assembly.stacks) {
     // get old template
-    const oldTemplate = await getTemplate(stack.stackName)
+    const oldTemplate = await getTemplate(
+      stack.stackName,
+      project.config.region,
+    )
     if (!oldTemplate) {
       summary.addHeading(`${stackNameToId(stack.stackName)}: New stack`, 2)
       summary.addSeparator()
@@ -103,10 +105,13 @@ function getErrorMessage(error: unknown) {
   return toErrorWithMessage(error).message
 }
 
-async function getTemplate(stackName: string): Promise<unknown> {
+async function getTemplate(
+  stackName: string,
+  region: string | undefined,
+): Promise<unknown> {
   try {
-    const cfn = useAWSClient(CloudFormationClient)
-    const response = await cfn.send(
+    const client = new CloudFormationClient({ region })
+    const response = await client.send(
       new GetTemplateCommand({ StackName: stackName }),
     )
     return JSON.parse(response.TemplateBody || '')
