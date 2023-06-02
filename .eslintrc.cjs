@@ -15,6 +15,8 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    'i18n-text/no-en': 'off',
+    'import/extensions': 'off',
     '@typescript-eslint/no-misused-promises': [
       'error',
       {
