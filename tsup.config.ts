@@ -8,6 +8,6 @@ export default defineConfig({
   minify: true,
   noExternal: [/(.*)/],
   splitting: false,
-  sourcemap: true,
+  sourcemap: false,
   clean: true,
 })
