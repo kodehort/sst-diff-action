@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: ['src/main.ts'],
   target: 'es2022',
-  // format: ['esm'],
+  format: ['esm'],
   platform: 'node',
   minify: true,
   noExternal: [/(.*)/],

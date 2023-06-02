@@ -9,9 +9,10 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
-    "tsup": "tsup",
+    "ncc": "ncc build --minify --license licenses.txt",
+    "package": "tsup",
     "test": "vitest run",
+    "clean:dist": "git filter-branch --index-filter 'git rm -rf --cached --ignore-unmatch dist' HEAD",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
@@ -27,7 +28,6 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@aws-sdk/client-cloudformation": "^3.344.0",
     "@babel/preset-typescript": "^7.21.5",
     "proxy-agent": "^6.2.1",
     "sst": "^2.11.14"
