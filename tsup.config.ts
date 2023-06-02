@@ -7,7 +7,7 @@ export default defineConfig({
   platform: 'node',
   minify: true,
   noExternal: [/(.*)/],
-  splitting: false,
+  splitting: true,
   sourcemap: false,
   clean: true,
 })
