@@ -1,11 +1,13 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+---
+name: 'sst-diff-action'
+description: |
+  Github action that will compile an sst diff and write it to
+  the action summary.
+author: 'Kodehort'
 inputs:
-  milliseconds: # change this
+  stage:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'The stage you wish to run the diff against'
 runs:
   using: 'node16'
-  main: 'dist/index.js'
+  main: 'dist/main.mjs'

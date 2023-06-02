@@ -1,19 +1,23 @@
-import { summary } from '@actions/core'
+import { setFailed, summary } from '@actions/core'
 import {
   CloudFormationClient,
   GetTemplateCommand,
 } from '@aws-sdk/client-cloudformation'
-import { stackNameToId } from 'sst/cli/ui/stack'
-import { useAWSClient } from 'sst/credentials'
-import { useProject } from 'sst/project'
-import { Stacks } from 'sst/stacks'
+import { stackNameToId } from 'sst/cli/ui/stack.js'
+import { useAWSClient } from 'sst/credentials.js'
+import { useProject } from 'sst/project.js'
+import { Stacks } from 'sst/stacks/index.js'
 
-export const writeSummary = async (): Promise<void> => {
+export const writeSummary = async (stage: string): Promise<void> => {
+  // Build app
   const project = useProject()
+  const [_metafile, sstConfig] = await Stacks.load(project.paths.config)
   const assembly = await Stacks.synth({
-    fn: project.stacks,
+    fn: sstConfig.stacks,
     mode: 'deploy',
   })
+
+  summary.addHeading(`Summary diff against ${stage}`)
 
   // Diff each stack
   let changesAcc = 0
@@ -22,7 +26,7 @@ export const writeSummary = async (): Promise<void> => {
     // get old template
     const oldTemplate = await getTemplate(stack.stackName)
     if (!oldTemplate) {
-      summary.addHeading(`${stackNameToId(stack.stackName)}: New stack`)
+      summary.addHeading(`${stackNameToId(stack.stackName)}: New stack`, 2)
       summary.addSeparator()
       continue
     }
@@ -32,46 +36,81 @@ export const writeSummary = async (): Promise<void> => {
 
     // print diff result
     if (count === 0) {
-      summary.addHeading(`${stackNameToId(stack.stackName)}: No changes`)
-      summary.addSeparator()
+      summary.addHeading(`${stackNameToId(stack.stackName)}: No changes`, 2)
     } else if (count === 1) {
-      summary.addHeading(`${stackNameToId(stack.stackName)}: ${count} change`)
+      summary.addHeading(
+        `${stackNameToId(stack.stackName)}: ${count} change`,
+        2,
+      )
       summary.addCodeBlock(diff as string, 'diff')
-      summary.addSeparator()
       changesAcc += count
       changedStacks++
     } else {
-      summary.addHeading(`${stackNameToId(stack.stackName)}: ${count} changes`)
+      summary.addHeading(
+        `${stackNameToId(stack.stackName)}: ${count} changes`,
+        2,
+      )
       summary.addCodeBlock(diff as string, 'diff')
-      summary.addSeparator()
+
       changesAcc += count
       changedStacks++
     }
+    summary.addBreak()
+    summary.addSeparator()
+    summary.addBreak()
   }
 
   // Handle no changes
   if (changedStacks === 0) {
-    summary.addHeading(`No changes`)
+    summary.addRaw('No changes')
   } else {
-    summary.addHeading(
+    summary.addRaw(
       `${changesAcc === 1 ? '1 change found in' : `${changesAcc} changes in`} ${
         changedStacks === 1 ? '1 stack' : `${changedStacks} stacks`
       }`,
     )
   }
+
+  await summary.write()
 }
 
-async function getTemplate(stackName: string) {
+type ErrorWithMessage = {
+  message: string
+}
+
+function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as Record<string, unknown>).message === 'string'
+  )
+}
+
+function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
+  if (isErrorWithMessage(maybeError)) return maybeError
+
+  try {
+    return new Error(JSON.stringify(maybeError))
+  } catch {
+    // fallback in case there's an error stringifying the maybeError
+    // like with circular references for example.
+    return new Error(String(maybeError))
+  }
+}
+
+function getErrorMessage(error: unknown) {
+  return toErrorWithMessage(error).message
+}
+
+async function getTemplate(stackName: string): Promise<unknown> {
   try {
     const cfn = useAWSClient(CloudFormationClient)
     const response = await cfn.send(
       new GetTemplateCommand({ StackName: stackName }),
     )
-    return JSON.parse(response.TemplateBody!)
-  } catch (e: any) {
-    if (e.name === 'ValidationError' && e.message.includes('does not exist')) {
-      return
-    }
-    throw e
+    return JSON.parse(response.TemplateBody || '')
+  } catch (e) {
+    setFailed(getErrorMessage(e))
   }
 }
