@@ -27,6 +27,9 @@ describe('project', () => {
   it('locates the sst project as expected', async () => {
     vi.spyOn(process, 'cwd').mockReturnValue(testDirectoryPath)
     const project = await initProject({ stage: 'test' })
-    expect(project).toMatchSnapshot()
+    expect(project.config.stage).toEqual('test')
+    expect(project.paths.config).toContain('sst.config.js')
+    expect(project.paths.dist).toContain('.sst/dist')
+    expect(project.paths.out).toContain('.sst')
   })
 })
