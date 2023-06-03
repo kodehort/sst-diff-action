@@ -5,7 +5,7 @@ export default defineConfig({
   target: 'node16',
   format: ['cjs'],
   platform: 'node',
-  minify: false,
+  minify: true,
   noExternal: [
     '@actions/core',
     '@aws-sdk/client-cloudformation',
@@ -14,6 +14,6 @@ export default defineConfig({
     'aws-cdk-lib/cx-api',
   ],
   splitting: false,
-  sourcemap: true,
+  sourcemap: false,
   clean: true,
 })
