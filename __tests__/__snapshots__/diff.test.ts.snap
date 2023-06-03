@@ -28,8 +28,3 @@ exports[`diff > extracts the diff as expected 1`] = `
 <br>
 2 changes in 1 stack"
 `;
-
-exports[`diff > it extracts the diff as expected 1`] = `
-"<h1>Summary diff against production</h1>
-"
-`;
