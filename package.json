@@ -2,18 +2,18 @@
   "name": "sst-diff-action",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "Github action that will compile an sst diff and write it to the action summary.",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "ncc": "ncc build --minify --license licenses.txt",
     "package": "tsup",
     "test": "vitest run",
+    "act": "npm run package && act -j test -W .github/workflows/test.yml",
     "clean:dist": "git filter-branch --index-filter 'git rm -rf --cached --ignore-unmatch dist' HEAD",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
     "type": "git",
@@ -28,9 +28,10 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@babel/preset-typescript": "^7.21.5",
-    "proxy-agent": "^6.2.1",
-    "sst": "^2.11.14"
+    "@aws-cdk/cloud-assembly-schema": "^2.82.0",
+    "@aws-cdk/cloudformation-diff": "^2.82.0",
+    "@aws-sdk/client-cloudformation": "^3.345.0",
+    "aws-cdk-lib": "^2.82.0"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.0.2",

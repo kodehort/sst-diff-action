@@ -33,6 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: |
+          mkdir -p .sst/dist
+          touch .sst/dist/manifest.json
+          echo '{"version": "31.0.0","artifacts": {}}' > .sst/dist/manifest.json
+          touch sst.config.ts
       - uses: ./
         with:
           stage: production
