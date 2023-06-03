@@ -17,6 +17,8 @@ module.exports = {
   rules: {
     'i18n-text/no-en': 'off',
     'import/extensions': 'off',
+    'no-constant-condition': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-misused-promises': [
       'error',
       {

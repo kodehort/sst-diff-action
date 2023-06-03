@@ -1,14 +1,13 @@
 import * as fs from 'fs'
 import path from 'path'
 import { summary } from '@actions/core'
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { writeSummary } from '../src/diff'
 
 export const SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY'
 const testDirectoryPath = path.join(__dirname, 'test')
 const testFilePath = path.join(testDirectoryPath, 'test-summary.md')
 
-// shows how the runner will run a javascript action with env / stdout protocol
 describe('diff', () => {
   beforeEach(async () => {
     process.env[SUMMARY_ENV_VAR] = testFilePath
@@ -19,26 +18,23 @@ describe('diff', () => {
 
   afterEach(async () => {
     await fs.promises.unlink(testFilePath)
+    vi.restoreAllMocks()
   })
-  test('it extracts the diff as expected', async () => {
-    await writeSummary('production')
+
+  it('extracts the diff as expected', async () => {
+    await writeSummary({
+      config: {
+        stage: 'production',
+      },
+      paths: {
+        config: '',
+        out: '',
+        dist: '',
+      },
+    })
     const file = await fs.promises.readFile(testFilePath, { encoding: 'utf8' })
     expect(file).toMatchSnapshot()
   })
-})
-
-vi.mock('sst/project.js', () => {
-  return {
-    useProject: vi.fn().mockReturnValue({
-      stacks: [],
-      paths: {
-        config: '',
-      },
-      config: {
-        region: undefined,
-      },
-    }),
-  }
 })
 
 vi.mock('@aws-sdk/client-cloudformation', async () => {
@@ -51,17 +47,10 @@ vi.mock('@aws-sdk/client-cloudformation', async () => {
   return { CloudFormationClient, GetTemplateCommand }
 })
 
-vi.mock('sst/cli/ui/stack.js', () => {
-  return {
-    stackNameToId: vi.fn().mockReturnValue('production-saas-Web'),
-  }
-})
-
-vi.mock('sst/stacks/index.js', () => {
+vi.mock('../src/stacks', () => {
   return {
     Stacks: {
-      load: vi.fn().mockReturnValue(['metafile', {}]),
-      synth: vi.fn().mockReturnValue({
+      loadAssembly: vi.fn().mockReturnValue({
         stacks: [
           {
             id: 'production-saas-Web',
