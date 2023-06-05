@@ -15,7 +15,10 @@ export const writeSummary = async (project: Project): Promise<void> => {
   // Build app
   const assembly = await Stacks.loadAssembly(project.paths.dist)
 
-  summary.addHeading(`Summary diff against ${project.config.stage}`)
+  summary.addHeading(
+    `Changes that will be deployed to ${project.config.stage}`,
+    2,
+  )
 
   // Diff each stack
   let changesAcc = 0
@@ -24,7 +27,7 @@ export const writeSummary = async (project: Project): Promise<void> => {
     // get old template
     const oldTemplate = await getTemplate(stack.stackName)
     if (!oldTemplate) {
-      summary.addHeading(`${stackNameToId(stack.stackName)}: New stack`, 2)
+      summary.addHeading(`${stackNameToId(stack.stackName)}: New stack`, 3)
       summary.addSeparator()
       continue
     }
@@ -34,19 +37,19 @@ export const writeSummary = async (project: Project): Promise<void> => {
 
     // print diff result
     if (count === 0) {
-      summary.addHeading(`${stackNameToId(stack.stackName)}: No changes`, 2)
+      summary.addHeading(`${stackNameToId(stack.stackName)}: No changes`, 3)
     } else if (count === 1) {
       summary.addHeading(
         `${stackNameToId(stack.stackName)}: ${count} change`,
-        2,
+        3,
       )
-      summary.addCodeBlock(diff as string, 'diff')
+      summary.addCodeBlock(diff as string)
       changesAcc += count
       changedStacks++
     } else {
       summary.addHeading(
         `${stackNameToId(stack.stackName)}: ${count} changes`,
-        2,
+        3,
       )
       summary.addCodeBlock(diff as string, 'diff')
 
@@ -65,7 +68,7 @@ export const writeSummary = async (project: Project): Promise<void> => {
     summary.addRaw(
       `${changesAcc === 1 ? '1 change found in' : `${changesAcc} changes in`} ${
         changedStacks === 1 ? '1 stack' : `${changedStacks} stacks`
-      }`,
+      } to be deployed.`,
     )
   }
 

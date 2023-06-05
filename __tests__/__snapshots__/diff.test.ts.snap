@@ -1,8 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`diff > extracts the diff as expected 1`] = `
-"<h1>Summary diff against production</h1>
-<h2>production-saas-Web: 2 changes</h2>
+"<h2>Changes that will be deployed to production</h2>
+<h3>production-saas-Web: 2 changes</h3>
 <pre lang=\\"diff\\"><code>   [37m[4m[1mResources[22m[24m[39m
    [37m[33m[~][39m[37m [36mCustom::SSTBucketDeployment[39m[37m app/S3Deployment [90mappS3Deployment7E67F692[39m[37m [39m
    [37m ├─ [33m[~][39m[37m Filenames[39m
@@ -26,5 +26,5 @@ exports[`diff > extracts the diff as expected 1`] = `
 <br>
 <hr>
 <br>
-2 changes in 1 stack"
+2 changes in 1 stack to be deployed."
 `;
