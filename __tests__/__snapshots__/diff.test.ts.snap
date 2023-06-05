@@ -25,6 +25,5 @@ exports[`diff > extracts the diff as expected 1`] = `
 </code></pre>
 <br>
 <hr>
-<br>
 2 changes in 1 stack to be deployed."
 `;
