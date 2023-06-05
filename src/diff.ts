@@ -28,7 +28,6 @@ export const writeSummary = async (project: Project): Promise<void> => {
     const oldTemplate = await getTemplate(stack.stackName)
     if (!oldTemplate) {
       summary.addHeading(`${stackNameToId(stack.stackName)}: New stack`, 3)
-      summary.addSeparator()
       continue
     }
 
@@ -57,10 +56,9 @@ export const writeSummary = async (project: Project): Promise<void> => {
       changedStacks++
     }
     summary.addBreak()
-    summary.addSeparator()
-    summary.addBreak()
   }
 
+  summary.addSeparator()
   // Handle no changes
   if (changedStacks === 0) {
     summary.addRaw('No changes')
