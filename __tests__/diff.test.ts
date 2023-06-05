@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import fs from 'fs'
 import path from 'path'
 import { summary } from '@actions/core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'

@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import fs from 'fs'
 import path from 'path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { initProject } from '../src/project'
@@ -27,7 +27,7 @@ describe('project', () => {
   it('locates the sst project as expected', async () => {
     vi.spyOn(process, 'cwd').mockReturnValue(testDirectoryPath)
     const project = await initProject({ stage: 'test' })
-    expect(project.config.stage).toEqual('test')
+    expect(project.config.stage).toBe('test')
     expect(project.paths.config).toContain('sst.config.js')
     expect(project.paths.dist).toContain('.sst/dist')
     expect(project.paths.out).toContain('.sst')
