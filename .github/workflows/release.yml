@@ -1,29 +1,26 @@
 ---
-name: 'build-test'
-# rebuild any PRs and main branch changes
+name: Create release and publish package
 on:
-  pull_request:
   push:
     branches:
       - main
-      - 'releases/*'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  # make sure build/ci work properly
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - uses: pnpm/action-setup@v2
         id: pnpm-install
         with:
           version: 8
           run_install: false
 
-      - uses: actions/setup-node@v3.6.0
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: '16.x'
 
       - id: pnpm-cache-config
         shell: bash
@@ -45,19 +42,11 @@ jobs:
         if: steps.deps-cache.outputs.cache-hit != 'true'
         run: pnpm install
 
-      - run: |
-          pnpm run all
-
-  # make sure the action works on a clean machine without building
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          mkdir -p .sst/dist
-          touch .sst/dist/manifest.json
-          echo '{"version": "31.0.0","artifacts": {}}' > .sst/dist/manifest.json
-          touch sst.config.ts
-      - uses: ./
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
         with:
-          stage: production
+          publish: pnpm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
