@@ -2,6 +2,7 @@
   "name": "sst-diff-action",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "Github action that will compile an sst diff and write it to the action summary.",
   "main": "lib/main.js",
   "engines": {
@@ -27,7 +28,7 @@
     "diff",
     "sst"
   ],
-  "author": "",
+  "author": "Kodehort Limited",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
