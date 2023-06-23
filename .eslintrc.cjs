@@ -1,14 +1,6 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  plugins: ['vitest', '@typescript-eslint'],
-
-  extends: [
-    'plugin:github/recommended',
-    'plugin:vitest/recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
-  parser: '@typescript-eslint/parser',
+  extends: ['plugin:github/recommended', '@kodehort/eslint-config'],
   parserOptions: {
     ecmaVersion: 9,
     sourceType: 'module',
@@ -19,30 +11,16 @@ module.exports = {
     'import/extensions': 'off',
     'no-constant-condition': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/no-misused-promises': [
-      'error',
-      {
-        checksVoidReturn: false,
-      },
-    ],
     '@typescript-eslint/restrict-template-expressions': 'off',
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_',
-      },
-    ],
-    '@typescript-eslint/consistent-type-imports': [
-      'error',
-      { prefer: 'type-imports' },
-    ],
+    'perfectionist/sort-imports': 'off',
+    'n/no-missing-import': 'off',
+    'eslint-comments/no-use': 'off',
   },
+  root: true,
   env: {
     node: true,
     es6: true,
   },
-  ignorePatterns: ['**/*.config.js', '**/*.config.cjs', '**/*.config.ts'],
+  ignorePatterns: ['**/*.config.ts', '.eslintrc.cjs'],
   reportUnusedDisableDirectives: true,
 }

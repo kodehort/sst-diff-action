@@ -1,4 +1,5 @@
 import core from '@actions/core'
+
 import { writeSummary } from './diff'
 import { initProject } from './project'
 
