@@ -5,7 +5,7 @@
   "description": "Github action that will compile an sst diff and write it to the action summary.",
   "main": "lib/main.js",
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "scripts": {
     "format": "prettier --write '**/*.ts'",
