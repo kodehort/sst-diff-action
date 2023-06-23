@@ -9,14 +9,13 @@
     "node": "^16.0.0"
   },
   "scripts": {
+    "build": "ncc build src/index.ts -o dist --transpile-only --minify",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "tsup",
     "test": "vitest run",
     "act": "npm run package && act -j test -W .github/workflows/test.yml",
     "clean:dist": "git filter-branch --index-filter 'git rm -rf --cached --ignore-unmatch dist' HEAD",
-    "all": "npm run format && npm run lint && npm run package && npm test",
     "bump": "node ./scripts/bump.cjs",
     "release": "node ./scripts/release.cjs"
   },

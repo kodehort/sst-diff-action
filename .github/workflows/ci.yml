@@ -1,15 +1,13 @@
 ---
-name: 'build-test'
-# rebuild any PRs and main branch changes
+name: Node CI
+
 on:
   pull_request:
   push:
     branches:
       - main
-      - 'releases/*'
 
 jobs:
-  # make sure build/ci work properly
   build:
     runs-on: ubuntu-latest
     steps:
@@ -45,19 +43,21 @@ jobs:
         if: steps.deps-cache.outputs.cache-hit != 'true'
         run: pnpm install
 
-      - run: |
-          pnpm run all
+      - name: lint
+        run: pnpm run lint
 
-  # make sure the action works on a clean machine without building
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: test
+        run: pnpm run test
+
+      - name: build
+        run: pnpm run build
+
       - run: |
           mkdir -p .sst/dist
           touch .sst/dist/manifest.json
           echo '{"version": "31.0.0","artifacts": {}}' > .sst/dist/manifest.json
           touch sst.config.ts
+
       - uses: ./
         with:
           stage: production
