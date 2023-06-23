@@ -10,7 +10,7 @@ inputs:
     description: 'The stage you wish to run the diff against'
 runs:
   using: 'node16'
-  main: 'dist/main.cjs'
+  main: 'dist/index.js'
 branding:
   icon: 'code'
   color: 'gray-dark'
