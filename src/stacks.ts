@@ -1,8 +1,10 @@
 import { ArtifactMetadataEntryType } from '@aws-cdk/cloud-assembly-schema'
-
-// prettier-ignore
-import { type FormatStream, type TemplateDiff, diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
-
+import {
+  diffTemplate,
+  formatDifferences,
+  type FormatStream,
+  type TemplateDiff,
+} from '@aws-cdk/cloudformation-diff'
 import { type Template } from 'aws-cdk-lib/assertions'
 import {
   CloudAssembly,
