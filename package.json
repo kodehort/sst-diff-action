@@ -2,7 +2,6 @@
   "name": "sst-diff-action",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "description": "Github action that will compile an sst diff and write it to the action summary.",
   "main": "lib/main.js",
   "engines": {
@@ -50,7 +49,6 @@
     "eslint-plugin-github": "^4.8.0",
     "js-yaml": "^4.1.0",
     "prettier": "^2.8.8",
-    "tsup": "^7.0.0",
     "typescript": "^5.1.3",
     "vitest": "^0.32.2"
   }
