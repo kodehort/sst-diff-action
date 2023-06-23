@@ -8,15 +8,15 @@
     "node": "^16.0.0"
   },
   "scripts": {
-    "build": "ncc build src/index.ts -o dist --transpile-only --minify",
+    "build": "ncc build src/index.ts -o dist --source-map --license licenses.txt --minify",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
     "test": "vitest run",
-    "act": "npm run package && act -j test -W .github/workflows/test.yml",
+    "act": "npm run build && act -j test -W .github/workflows/ci.yml",
     "clean:dist": "git filter-branch --index-filter 'git rm -rf --cached --ignore-unmatch dist' HEAD",
-    "bump": "node ./scripts/bump.cjs",
-    "release": "node ./scripts/release.cjs"
+    "bump": "node ./scripts/bump.js",
+    "release": "node ./scripts/release.js"
   },
   "repository": {
     "type": "git",

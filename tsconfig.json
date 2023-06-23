@@ -1,6 +1,10 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "target": "ESNEXT"
+    "target": "esnext",
+    "module": "commonjs",
+    "noEmit": true,
+    "isolatedModules": true,
+    "strict": true,
+    "esModuleInterop": true
   }
 }
