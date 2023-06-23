@@ -34,7 +34,24 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Install dependencies
+      - id: pnpm-cache-config
+        shell: bash
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Cache NPM dependencies
+        id: deps-cache
+        with:
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: |
+            ${{ steps.pnpm-cache-config.outputs.pnpm_cache_dir }}
+            **/node_modules
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: install deps (with cache)
+        if: steps.deps-cache.outputs.cache-hit != 'true'
         run: pnpm install
 
       - name: Rebuild the dist/ directory
@@ -57,3 +74,9 @@ jobs:
         with:
           name: dist
           path: dist/
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

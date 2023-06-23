@@ -2,9 +2,11 @@
   "name": "sst-diff-action",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "description": "Github action that will compile an sst diff and write it to the action summary.",
   "main": "lib/main.js",
+  "engines": {
+    "node": "^16.0.0"
+  },
   "scripts": {
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
@@ -13,7 +15,8 @@
     "test": "vitest run",
     "act": "npm run package && act -j test -W .github/workflows/test.yml",
     "clean:dist": "git filter-branch --index-filter 'git rm -rf --cached --ignore-unmatch dist' HEAD",
-    "all": "npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run format && npm run lint && npm run package && npm test",
+    "release": "changeset publish"
   },
   "repository": {
     "type": "git",
@@ -34,6 +37,7 @@
     "aws-cdk-lib": "^2.85.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.0.2",
     "@kodehort/eslint-config": "^2.1.0",
     "@total-typescript/ts-reset": "^0.4.2",
