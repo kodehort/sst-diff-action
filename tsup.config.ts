@@ -1,10 +1,9 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
+  clean: true,
   entry: ['src/main.ts'],
-  target: 'node16',
   format: ['cjs'],
-  platform: 'node',
   minify: true,
   noExternal: [
     '@actions/core',
@@ -13,7 +12,8 @@ export default defineConfig({
     '@aws-cdk/cloud-assembly-schema',
     'aws-cdk-lib/cx-api',
   ],
-  splitting: false,
+  platform: 'node',
   sourcemap: false,
-  clean: true,
+  splitting: false,
+  target: 'node16',
 })

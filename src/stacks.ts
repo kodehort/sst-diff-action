@@ -1,47 +1,56 @@
 import { ArtifactMetadataEntryType } from '@aws-cdk/cloud-assembly-schema'
-import type { FormatStream } from '@aws-cdk/cloudformation-diff'
-import { diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff'
+
+// prettier-ignore
+import { type FormatStream, type TemplateDiff, diffTemplate, formatDifferences } from '@aws-cdk/cloudformation-diff';
+
 import { type Template } from 'aws-cdk-lib/assertions'
-import type { CloudFormationStackArtifact } from 'aws-cdk-lib/cx-api'
-import { CloudAssembly } from 'aws-cdk-lib/cx-api'
+import {
+  CloudAssembly,
+  type CloudFormationStackArtifact,
+} from 'aws-cdk-lib/cx-api'
 
 export * as Stacks from './stacks'
 
-export async function diff(
+export function diff(
   stack: CloudFormationStackArtifact,
   oldTemplate: Template,
 ) {
   // Generate diff
-  const diffOutput = diffTemplate(oldTemplate, stack.template)
+  const diffOutput: TemplateDiff = diffTemplate(
+    oldTemplate,
+    stack.template as Template,
+  )
   if (diffOutput.isEmpty) {
     return { count: 0 }
   }
 
   // Only display resource and output changes
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.iamChanges = { hasChanges: false }
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.securityGroupChanges = { hasChanges: false }
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.awsTemplateFormatVersion = false
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.transform = false
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.description = false
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.parameters = { differenceCount: 0 }
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.metadata = { differenceCount: 0 }
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.mappings = { differenceCount: 0 }
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.conditions = { differenceCount: 0 }
-  // @ts-ignore
+  // @ts-expect-error
   diffOutput.unknown = { differenceCount: 0 }
 
   // Filter out SST internal diffs
-  // @ts-ignore
-  delete diffOutput.outputs.diffs?.['SSTMetadata']
+  /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+  // @ts-expect-error
+  delete diffOutput.outputs.diffs?.SSTMetadata
+  /* eslint-enable */
 
   // Format diff
   const output: string[] = []
@@ -50,7 +59,7 @@ export async function diff(
       output.push(`   ${chunk}`)
     },
   } as FormatStream
-  const pathMap = await buildLogicalToPathMap(stack)
+  const pathMap = buildLogicalToPathMap(stack)
   formatDifferences(stream, diffOutput, pathMap)
 
   // Remove trailing newline
@@ -69,16 +78,17 @@ export async function diff(
   }
 }
 
-async function buildLogicalToPathMap(stack: CloudFormationStackArtifact) {
-  const map: { [id: string]: string } = {}
+function buildLogicalToPathMap(stack: CloudFormationStackArtifact) {
+  const map: Record<string, string> = {}
   for (const md of stack.findMetadataByType(
     ArtifactMetadataEntryType.LOGICAL_ID,
   )) {
     map[md.data as string] = md.path
   }
+
   return map
 }
 
-export async function loadAssembly(from: string) {
+export function loadAssembly(from: string) {
   return new CloudAssembly(from)
 }

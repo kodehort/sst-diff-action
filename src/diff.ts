@@ -4,6 +4,7 @@ import {
   GetTemplateCommand,
 } from '@aws-sdk/client-cloudformation'
 import { type Template } from 'aws-cdk-lib/assertions'
+
 import { type Project } from './project'
 import { Stacks } from './stacks'
 
@@ -13,7 +14,7 @@ const stackNameToId = (stackName: string) => {
 
 export const writeSummary = async (project: Project): Promise<void> => {
   // Build app
-  const assembly = await Stacks.loadAssembly(project.paths.dist)
+  const assembly = Stacks.loadAssembly(project.paths.dist)
 
   summary.addHeading(
     `Changes that will be deployed to ${project.config.stage}`,
@@ -32,7 +33,7 @@ export const writeSummary = async (project: Project): Promise<void> => {
     }
 
     // generate diff
-    const { count, diff } = await Stacks.diff(stack, oldTemplate)
+    const { count, diff } = Stacks.diff(stack, oldTemplate)
 
     // print diff result
     if (count === 0) {
@@ -42,7 +43,10 @@ export const writeSummary = async (project: Project): Promise<void> => {
         `${stackNameToId(stack.stackName)}: ${count} change`,
         3,
       )
-      summary.addCodeBlock(diff as string)
+      if (diff) {
+        summary.addCodeBlock(diff)
+      }
+
       changesAcc += count
       changedStacks++
     } else {
@@ -50,11 +54,14 @@ export const writeSummary = async (project: Project): Promise<void> => {
         `${stackNameToId(stack.stackName)}: ${count} changes`,
         3,
       )
-      summary.addCodeBlock(diff as string, 'diff')
+      if (diff) {
+        summary.addCodeBlock(diff, 'diff')
+      }
 
       changesAcc += count
       changedStacks++
     }
+
     summary.addBreak()
   }
 

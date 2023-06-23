@@ -1,7 +1,8 @@
-import fs from 'fs'
-import path from 'path'
 import { summary } from '@actions/core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import fs from 'fs'
+import path from 'path'
+
 import { writeSummary } from '../src/diff'
 
 export const SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY'
