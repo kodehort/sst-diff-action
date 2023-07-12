@@ -1,5 +1,5 @@
 ---
-name: Node CI
+name: 🔬 CI
 
 on:
   pull_request:
@@ -8,28 +8,33 @@ on:
       - main
 
 jobs:
-  test:
+  ci:
+    name: CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
+      - name: ⎔ Setup pnpm
+        uses: pnpm/action-setup@v2
         id: pnpm-install
         with:
           version: 8
           run_install: false
 
-      - uses: actions/setup-node@v3.6.0
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3.6.0
         with:
           node-version: 16.x
 
-      - id: pnpm-cache-config
+      - name: 🛠 Setup cache
+        id: pnpm-cache-config
         shell: bash
         run: |
           echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v3
-        name: Cache NPM dependencies
+      - name: 🏦 Cache NPM dependencies
+        uses: actions/cache@v3
         id: deps-cache
         with:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -39,25 +44,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: install deps (with cache)
+      - name: 📥 Install deps (with cache)
         if: steps.deps-cache.outputs.cache-hit != 'true'
         run: pnpm install
 
-      - name: lint
+      - name: ⬣ ESLint
         run: pnpm run lint
 
-      - name: test
+      - name: 🔎 Type check
+        run: pnpm run typecheck
+
+      - name: ⚡ Vitest
         run: pnpm run test
 
-      # - name: build
-      #   run: pnpm run build
-      #
-      # - run: |
-      #     mkdir -p .sst/dist
-      #     touch .sst/dist/manifest.json
-      #     echo '{"version": "31.0.0","artifacts": {}}' > .sst/dist/manifest.json
-      #     touch sst.config.ts
-      #
-      # - uses: ./
-      #   with:
-      #     stage: production
+      - name: 🏗 Build
+        run: pnpm run build
+
+      - name: 🛠 Integration setup
+        run: |
+          mkdir -p .sst/dist
+          touch .sst/dist/manifest.json
+          echo '{"version": "31.0.0","artifacts": {}}' > .sst/dist/manifest.json
+          touch sst.config.ts
+
+      - name: 🔬 Integration tests
+        uses: ./
+        with:
+          stage: production

@@ -18,6 +18,7 @@ module.exports = {
     'filenames/match-regex': 'off',
     'i18n-text/no-en': 'off',
     'import/extensions': 'off',
+    'import/no-namespace': 'off',
     'no-constant-condition': 'off',
   },
 }
