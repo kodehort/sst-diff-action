@@ -4,8 +4,11 @@ export default defineConfig({
   clean: true,
   entry: ['src/index.ts'],
   format: ['cjs'],
-  minify: true,
+  minify: false,
   noExternal: [
+    '@actions/core',
+    '@actions/exec',
+    '@actions/github',
     '@aws-sdk/client-cloudformation',
     '@aws-cdk/cloudformation-diff',
     '@aws-cdk/cloud-assembly-schema',
