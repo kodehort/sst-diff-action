@@ -1,5 +1,11 @@
 # @kodehort/sst-diff-action
 
+## 0.2.1
+
+### Patch Changes
+
+- 36ce9b2: remove minification of bundled code
+
 ## 0.2.0
 
 ### Minor Changes
