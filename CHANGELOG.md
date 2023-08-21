@@ -1,5 +1,11 @@
 # @kodehort/sst-diff-action
 
+## 0.2.2
+
+### Patch Changes
+
+- cd5cb63: Update CDK libs for compatibility
+
 ## 0.2.1
 
 ### Patch Changes
