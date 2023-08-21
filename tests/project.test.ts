@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import fs from 'fs'
 import path from 'path'
+
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { initProject } from '../src/project'
 

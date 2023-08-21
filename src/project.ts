@@ -1,6 +1,7 @@
-import * as core from '@actions/core'
 import fsSync from 'fs'
 import path from 'path'
+
+import * as core from '@actions/core'
 
 const CONFIG_EXTENSIONS = [
   '.config.ts',
