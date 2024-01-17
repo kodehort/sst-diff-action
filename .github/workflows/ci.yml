@@ -34,7 +34,7 @@ jobs:
           echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: 🏦 Cache NPM dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: deps-cache
         with:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
